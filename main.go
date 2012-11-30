@@ -13,7 +13,7 @@ func write(ch string) {
 	for {
 		switch line, err := rdr.ReadString('\n'); err {
 		case nil:
-			_, err := http.PostForm("http://localhost:8080/?channel=mux", url.Values{"data": {line[:len(line)-1]}})
+			_, err := http.PostForm("http://localhost:8080/?channel=" + ch, url.Values{"data": {line[:len(line)-1]}})
 			if err != nil {
 				fmt.Fprintln(os.Stderr, "error:", err)
 				os.Exit(1)
@@ -30,8 +30,7 @@ func write(ch string) {
 }
 
 func read(ch string) {
-	fmt.Println("reading")
-	resp, err := http.Get("http://localhost:8080?channel=mux")
+	resp, err := http.Get("http://localhost:8080?channel=" + ch)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "error:", err)
 		os.Exit(1)
@@ -48,7 +47,6 @@ func read(ch string) {
 			os.Exit(1)
 		}
 	}
-	fmt.Println("done")
 }
 
 func main() {
