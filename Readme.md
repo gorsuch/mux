@@ -12,6 +12,8 @@ $ go get
 
 Assumes that you have a [muxd](https://github.com/gorsuch/muxd) instance listening on http://localhost:8080.
 
+You can override this by setting `MUXD_URL` to something else.
+
 ### Basic
 
 ```bash
