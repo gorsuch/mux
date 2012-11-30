@@ -9,7 +9,7 @@ import "os"
 import "os/signal"
 import "syscall"
 
-func stream() {
+func stream(ch string) {
 	conf := redis.DefaultConfig()
 	c := redis.NewClient(conf)
 	defer c.Close()
@@ -18,7 +18,7 @@ func stream() {
 	for {
 		switch line, err := rdr.ReadString('\n'); err {
 		case nil:
-			reply := c.Publish("stream", line[:len(line)-1])
+			reply := c.Publish(ch, line[:len(line)-1])
 			if reply.Err != nil {
 				fmt.Fprintln(os.Stderr, "error:", err)
 				os.Exit(1)
@@ -34,7 +34,7 @@ func stream() {
 	}
 }
 
-func tap() {
+func tap(ch string) {
 	done := make(chan bool, 1)
 	sigs := make(chan os.Signal, 1)
 
@@ -55,7 +55,7 @@ func tap() {
 	}
 
 	defer sub.Close()
-	sub.Subscribe("stream")
+	sub.Subscribe(ch)
 
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
@@ -72,6 +72,7 @@ func tap() {
 func main() {
 	s := flag.Bool("s", false, "stream mode")
 	t := flag.Bool("t", false, "tap mode")
+	c := flag.String("c", "stream", "pubsub channel")
 	flag.Parse()
 
 	if (*s == true && *t == true) || (*s == false && *t == false) {
@@ -80,8 +81,8 @@ func main() {
 	}
 
 	if *s == true {
-		stream()
+		stream(*c)
 	} else {
-		tap()
+		tap(*c)
 	}
 }
