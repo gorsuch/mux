@@ -1,6 +1,6 @@
 # mux
 
-An experimental line muxer
+An experimental line muxer and a client for [muxd](http://github.com/gorsuch/muxd).
 
 ## Build
 
@@ -9,6 +9,8 @@ $ go get
 ```
 
 ## Usage
+
+Assumes that you have a [muxd](https://github.com/gorsuch/muxd) instance listening on http://localhost:8080.
 
 ### Basic
 
