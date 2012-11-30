@@ -8,12 +8,13 @@ import "net/http"
 import "os"
 import "net/url"
 
-func write(ch string) {
+func write(ch string, muxdUrl url.URL) {
 	rdr := bufio.NewReader(os.Stdin)
+	muxdUrl.RawQuery = "channel=" + ch
 	for {
 		switch line, err := rdr.ReadString('\n'); err {
 		case nil:
-			_, err := http.PostForm("http://localhost:8080/?channel=" + ch, url.Values{"data": {line[:len(line)-1]}})
+			_, err := http.PostForm(muxdUrl.String(), url.Values{"data": {line[:len(line)-1]}})
 			if err != nil {
 				fmt.Fprintln(os.Stderr, "error:", err)
 				os.Exit(1)
@@ -29,8 +30,9 @@ func write(ch string) {
 	}
 }
 
-func read(ch string) {
-	resp, err := http.Get("http://localhost:8080?channel=" + ch)
+func read(ch string, muxdUrl url.URL) {
+	muxdUrl.RawQuery = "channel=" + ch
+	resp, err := http.Get(muxdUrl.String())
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "error:", err)
 		os.Exit(1)
@@ -60,9 +62,14 @@ func main() {
 		os.Exit(1)
 	}
 
+	muxdUrl, err := url.Parse(os.Getenv("MUXD_URL"))
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Can't parse MUXD_URL:", err)
+	}
+	
 	if *r == true {
-		read(*c)
+		read(*c, *muxdUrl)
 	} else {
-		write(*c)
+		write(*c, *muxdUrl)
 	}
 }
