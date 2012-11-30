@@ -60,9 +60,8 @@ func read(ch string) {
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 
 	go func() {
-		sig := <-sigs
+		<-sigs
 		fmt.Println()
-		fmt.Println(sig)
 		done <- true
 	}()
 
