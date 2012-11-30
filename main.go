@@ -75,7 +75,7 @@ func main() {
 	flag.Parse()
 
 	if (*r == true && *w == true) || (*r == false && *w == false) {
-		fmt.Fprintln(os.Stderr, "You us either -r or -w")
+		fmt.Fprintln(os.Stderr, "You need either -r or -w")
 		os.Exit(1)
 	}
 
