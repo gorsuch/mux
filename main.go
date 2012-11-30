@@ -5,22 +5,21 @@ import "flag"
 import "fmt"
 import "io"
 import "github.com/fzzbt/radix/redis"
+import "net/http"
 import "os"
 import "os/signal"
 import "syscall"
+import "net/url"
 
 func write(ch string) {
-	conf := redis.DefaultConfig()
-	c := redis.NewClient(conf)
-	defer c.Close()
-
+	//resp, err := http.Post("http://localhost:8080/?channel=mux", url.Values{:data })
 	rdr := bufio.NewReader(os.Stdin)
 	for {
 		switch line, err := rdr.ReadString('\n'); err {
 		case nil:
-			reply := c.Publish(ch, line[:len(line)-1])
-			if reply.Err != nil {
-				fmt.Fprintln(os.Stderr, "error:", err)
+			_, err := http.PostForm("http://localhost:8080/?channel=mux", url.Values{"data": {line[:len(line)-1]}})
+			if err != nil {
+				fmt.Fprintln(os.Stderr, "error:", err) 
 				os.Exit(1)
 			}
 
