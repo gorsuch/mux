@@ -64,7 +64,8 @@ func main() {
 
 	muxdUrl, err := url.Parse(os.Getenv("MUXD_URL"))
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Can't parse MUXD_URL:", err)
+		muxdUrl, _ = url.Parse("http://localhost:8080")
+		fmt.Fprintln(os.Stderr, "setting muxdUrl to http://localhost:8080")
 	}
 	
 	if *r == true {
