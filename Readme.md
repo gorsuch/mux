@@ -1,15 +1,20 @@
-# st
+# mux
 
-Stream and Tap
+experimental line muxer.
 
 ```bash
 # in one window
-$ st -t
+$ mux -r
 ```
 
 ```bash
-# in another
-$ echo hi there | st -s
+# in a second
+$ mux -r
 ```
 
-Notice `hi there` appear in the first window.
+```bash
+# in a third
+$ echo hi there | mux -w
+```
+
+Notice `hi there` appear in the first and second windows.

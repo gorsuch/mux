@@ -9,7 +9,7 @@ import "os"
 import "os/signal"
 import "syscall"
 
-func stream(ch string) {
+func write(ch string) {
 	conf := redis.DefaultConfig()
 	c := redis.NewClient(conf)
 	defer c.Close()
@@ -34,7 +34,7 @@ func stream(ch string) {
 	}
 }
 
-func tap(ch string) {
+func read(ch string) {
 	done := make(chan bool, 1)
 	sigs := make(chan os.Signal, 1)
 
@@ -70,19 +70,19 @@ func tap(ch string) {
 }
 
 func main() {
-	s := flag.Bool("s", false, "stream mode")
-	t := flag.Bool("t", false, "tap mode")
-	c := flag.String("c", "stream", "pubsub channel")
+	r := flag.Bool("r", false, "read mode")
+	w := flag.Bool("w", false, "write mode")
+	c := flag.String("c", "mux", "channel")
 	flag.Parse()
 
-	if (*s == true && *t == true) || (*s == false && *t == false) {
-		fmt.Fprintln(os.Stderr, "You us either -s or -t")
+	if (*r == true && *w == true) || (*r == false && *w == false) {
+		fmt.Fprintln(os.Stderr, "You us either -r or -w")
 		os.Exit(1)
 	}
 
-	if *s == true {
-		stream(*c)
+	if *r == true {
+		read(*c)
 	} else {
-		tap(*c)
+		write(*c)
 	}
 }
