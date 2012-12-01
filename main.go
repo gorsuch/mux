@@ -35,6 +35,13 @@ func read(ch string, muxdUrl url.URL) {
 		fmt.Fprintln(os.Stderr, "error:", err)
 		os.Exit(1)
 	}
+
+	defer resp.Body.Close()
+	code := resp.StatusCode
+	if code != 200 {
+		fmt.Fprintln(os.Stderr, "status: %v", code)
+	}
+
 	// TODO do something with the status code
 	rdr := bufio.NewReader(resp.Body)
 	for {
