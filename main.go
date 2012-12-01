@@ -19,10 +19,8 @@ func write(ch string, muxdUrl url.URL) {
 				fmt.Fprintln(os.Stderr, "error:", err)
 				os.Exit(1)
 			}
-
 		case io.EOF:
 			os.Exit(0)
-
 		default:
 			fmt.Fprintln(os.Stderr, "error:", err)
 			os.Exit(1)
