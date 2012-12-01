@@ -42,7 +42,6 @@ func read(ch string, muxdUrl url.URL) {
 		fmt.Fprintln(os.Stderr, "status: %v", code)
 	}
 
-	// TODO do something with the status code
 	rdr := bufio.NewReader(resp.Body)
 	for {
 		switch line, err := rdr.ReadString('\n'); err {
